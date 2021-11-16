@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+{% block title%}
+<title>Форумы - обсуждение</title>
+{% endblock %}
+{% block content %}
+{% load profile_tags %}
+
+
+<div class="container">
+    <div class="forum-navi">
+        <a href="{% url 'main:index' %}">Главная</a>
+        <span>&#8250;</span>
+        <a class="active" href="{% url 'forum:forum' %}">Форум</a>
+    </div>
+    <div class="forum">
+        {% for forumTitle in forumTitles %}
+        <div class="forum-titles">
+            <p>{{forumTitle.name}}</p>
+            <p></p>
+            <p>Кол-во постов</p>
+        </div> 
+        {% for forumTop in forumTitle.forumtop_set.all%}
+        <div  class="forum-block">
+            <div class="block-img"><img src="{{forumTop.image.url}}" alt=""></div>
+          
+                <a class="block-text" href="{% url 'forum:forumTop' forumTop.id %}">{{forumTop.name}}</a>
+                <p>{{forumTop.post_count}}</p>
+       
+            <div class="block-count"></div>
+        </div>
+        {% endfor %}
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

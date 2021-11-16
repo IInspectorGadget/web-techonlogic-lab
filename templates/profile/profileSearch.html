@@ -1,0 +1,33 @@
+{% extends 'index.html' %}
+{% block title%}
+<title>Поиск пользователей</title>
+{% endblock %}
+{% block content %}
+{% load profile_tags %}
+<div class="container">
+    <div class="profile-search">
+
+        <p>Поиск Пользователей</p>
+        <form action="{% url 'profile:profileSearch' %}" method="get">
+            <input class="search" name="username" type="text" placeholder="Поиск">
+            <input class="submit" type="submit" value="Поиск">
+        </form>
+        <ul>
+        {% for user in users %}
+            <li class="serch-result">
+                <img src="{{user.image_small.url}}" alt="">
+                <a href="{% url 'profile:profile' user.slug %}">{{ user.username }}</a> 
+            </li>
+        {% endfor %}
+        <div class="tournament__pagination">
+            {% include '../pagination.html' %}
+        </div> 
+        </ul>
+
+        
+
+        </div>
+    
+</div>
+
+{% endblock %}

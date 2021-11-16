@@ -1,0 +1,282 @@
+{% extends 'index.html' %}
+{% block title%}
+<title>Пользователь - {{profile.username}}</title>
+{% endblock %}
+{% block content %}
+{% load profile_tags %}
+
+    <div class="container">
+        {% if user.id == profile.id %}
+        {% else %}
+        
+        {% endif %}
+        <!-- START профиль -->
+        <div class="profile" data-id="{{profile.id}}" data-slug="{{profile.slug}}">
+            <!-- START Аватарка -->
+            <div class="profile-left">
+                <div class="image profile-border">
+                    <img class="" src="{{profile.image_small.url}}" alt="">
+                </div>
+                
+                <div class="requestFriend">
+                    {% if user.is_authenticated %}
+                        {% checkRequest user profile as requestedFriend %}
+                        {% getFriendId user profile as canFriendAdd %}
+                    {% endif %}
+                    
+                    {% if profile.id == user.id %}
+                        {% elif canFriendAdd %} 
+                        <a class="requestFriend-title" href="{% url 'profile:deleteFriend' user.slug|lower profile.slug|lower %}">Удалить из друзей</a>
+                        {% elif requestedFriend %}  
+                        <p class="requestFriend-title">Запрос уже отправлен</p>
+                        {% else %}
+                        <a class="requestFriend-title requestFriend-btn" href="{% url 'profile:add'  profile.slug|lower %}">добавить в друзья</a>
+                    {% endif %}
+                        
+                    <a class="requestFriend-title requestFriend-btn" href="{% url 'profile:profileSearch' %}">Поиск пользователей</a>
+                    
+                    {% if user.id == profile.id %}
+                        <a class="requestFriend-title requestFriend-btn" href="{% url 'profile:edit'  profile.slug|lower %}">Редактировать профиль</a>
+                    {% endif %}
+
+                </div>
+            </div>
+            <!-- END Аватарка -->
+            
+            <!-- START Инфморация -->
+            <div class="profile-right">
+                <div class="profle-directory profile-border">
+                    <div class="profile-container">
+                        <div class="profile-name "><span>Никнейм:</span>
+                            <p>
+                                {{profile.username}}
+                            </p>
+                        </div>
+                        {% if profile.first_name %}
+                        <div class="profile-name "><span>Имя:</span>
+                            <p>
+                               {{profile.first_name}}
+                            </p>
+                        </div>
+                        {% endif %}
+                        {% if profile.last_name %}
+                        <div class="profile-name "><span>Фамилия:</span>
+                            <p>
+                                 {{profile.last_name}}
+                            </p>
+                        </div>
+                        {% endif %}
+                        {% if profile.patronymic  %}
+                        <div class="profile-name "><span>Отчество:</span>
+                            <p>
+                                {{profile.patronymic}}
+                            </p>
+                        </div>
+                        {% endif %}
+                        
+                    
+                    <div class="profile-birth__day">
+                        <span>Дата рождения:</span>
+                        {% if profile.dateBirth %}
+                        <p>{{profile.dateBirth}}</p>
+                        {% else %}  <p>&#8212;</p>
+                        {% endif %}
+                    </div>
+                    <div class="profile-gender">
+                        <span>Пол:</span>
+                        <p>
+                            {% if profile.gender == 'М'  %}Мужской
+                            {% elif profile.gender == 'Ж'%}Женский
+                            {% else %}—{% endif %}
+                        </p>
+                    </div>
+                    </div>
+                </div>
+            
+            <!-- END Инфморация -->
+
+            <!-- START Контакты -->
+                <div class="profile-contacts profile-border">
+                    <div class="profile-container">
+                        <span>Email:</span>
+                        {% if profile.email != '' %}
+                        <p>{{profile.email}}</p>
+                        {% else %} <p>&#8212;</p>
+                        {% endif %}
+                        <span>Телефон:</span>
+                        {% if profile.phone != '' %}
+                        <p>{{profile.phone}}</p>
+                        {% else %} <p>&#8212;</p>
+                        {% endif %}
+                        <span>Адрес:</span>
+                        {% if profile.addres != '' %}
+                        <p class="profile-organization">{{profile.addres}}</p>
+                        {% else %} <p>&#8212;</p>
+                        {% endif %}
+                        <!-- <span>Организация:</span>
+                        {% if profile.organization != '' %}
+                        <p >{{profile.organization}}</p>
+                        {% else %} <p>&#8212;</p>
+                        {% endif %} -->
+                        <span>Skype:</span>
+                        {% if profile.skype != '' %}
+                        <p>{{profile.skype}}</p>
+                        {% else %} <p>&#8212;</p>
+                        {% endif %}
+                        
+
+                        
+                    </div>
+                </div>
+            <!-- END Контакты -->
+            </div>
+
+
+
+
+            <div class="flex-br"></div>
+
+
+
+            <!-- START Список друзей и приглашений -->
+            <div class="profile-friends profile-border">
+                <div class="friends">
+                    
+                    <div class="friends-title"><a href = "{% url 'profile:profileFriends' profile.slug %}">Друзья</a></div>
+                    <ul class="friends-list">
+                        
+                        <p class="friends-list-title">Список друзей</p>
+                        {% for friend in friends %}
+                        <li class="list-item">
+                            <div>
+                                <img src='{{friend.image_small.url}}'>
+                                <a href="{% url 'profile:profile' friend|lower %}">{{friend}}</a>
+                            </div>
+                            <div>
+                                {% if user.is_authenticated %}
+                                    {% if request.user.id == profile.id %}
+                                        <a href="{% url 'profile:deleteFriend' profile.slug|lower friend|lower %}" class="item-deny fas fa-times" title="Удалить"></a>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </li>
+                        {% endfor %} 
+                        <li class="friend-link-all"><a href = "{% url 'profile:profileFriends' profile.slug %}">Список всех друзей</a></li>
+
+                        {% if user.id == profile.id %}
+                            {% if profile.to_user.all%}
+                                <p class="friends-list-title">Принять друзей:</p>
+                                {% for friend in profile.to_user.all %}
+                                <li class="list-item-accept list-item">
+                                    <div>
+                                        <img src='{{friend.from_user.image_small.url}}'>
+                                        <a href="{% url 'profile:profile' friend.from_user.slug%}">{{friend.from_user.username}}</a>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'profile:accept' friend.from_user.slug %}" title="Принять" class="item-accept fas fa-check"></a>
+                                        <a href="{% url 'profile:deny' friend.from_user.slug %}" title="Отменить" class="item-deny fas fa-times"></a>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            {% endif %}
+                                <!-- <p class="friends-list-title">Найти друзей</p> -->
+                        {% endif %}
+                    </ul>
+                </div>
+
+            </div>
+            <!-- END Список друзей и приглашений -->
+
+        </div>
+        <!-- END профиль -->
+
+        
+
+    </div>
+
+
+
+
+{% endblock %}
+{% block beforewrapper %}
+{% if user.is_authenticated %}
+<div class="profile-overlay">
+    <div class="popup">
+        <div class="popup-meta">
+            <img src="{{profile.image_small.url}}" alt="">
+            <p href="">{{profile.last_name}} {{profile.first_name}} {{profile.username}}</p>
+        </div>
+        <div class="popup-text">
+            <textarea name="" cols="30" rows="10" id="message"></textarea>
+        </div>
+
+
+    </div>
+</div>
+{% endif %}
+
+
+
+<script>  CSRF_TOKEN = "{{ csrf_token}}";</script> 
+<script>
+    var userId = $('.logout').data('id');
+    var profileId = $('.profile').data('id');
+    var profileSluh = $('.profile').data('slug');
+    $('#submit-message').click(function(){
+        var message = $('#message').val();
+
+
+        $.ajax({
+            url : "{% url 'profile:profile' profile.slug %}" ,
+            type : 'POST',
+            data : { 
+                'profile_id': profileId,
+                'message': message,
+                csrfmiddlewaretoken: '{{ csrf_token }}' ,
+            },
+            headers: { 'X-CSRF-TOKEN': CSRF_TOKEN  },
+            
+            success: function(data) {
+            },
+            error: function(data){
+                alert("fail");
+            }
+        });
+    });
+
+
+</script>
+
+
+
+<script>
+    $('.java-write-message').click(function(){
+        $('.wrapper').css('filter','brightness(60%)');
+        $('.profile-overlay').fadeIn();
+        //$(".overlay").addClass('disabled');
+    });
+    
+    $('.close-popup').click(function(){
+        $('.profile-overlay').fadeOut();
+        $('.wrapper').css('filter','none');
+        $('header').css('filter','none');
+        
+    })
+    $('#submit-message').click(function(){
+        $('.profile-overlay').fadeOut();
+        $('.wrapper').css('filter','none');
+        $('header').css('filter','none');
+        
+    })
+    $(document).mouseup(function (e){
+        var popup = $('.popup');
+        if (e.target!=popup[0]&&popup.has(e.target).length === 0){
+            $('.profile-overlay').fadeOut();
+            $('.wrapper').css('filter','none');
+            $('header').css('filter','none');
+        }
+    })
+    
+</script>
+
+{% endblock %}

@@ -1,0 +1,121 @@
+@font-face {
+  font-family: 'PT Sans Narrow';
+  font-weight: 400;
+  src: url(../fonts/PTSansNarrow-Regular.ttf); /* Путь к файлу со шрифтом */
+ }
+@font-face {
+font-family: 'PT Sans Narrow';
+font-weight: 700;
+src: url(../fonts/PTSansNarrow-Bold.ttf); /* Путь к файлу со шрифтом */
+}
+
+/* OPEN SANS */
+/* cyrillic-ext */
+@font-face {
+font-family: 'Open Sans';
+font-style: normal;
+font-weight: 400;
+src: url(../fonts/OpenSans-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+@font-face {
+font-family: 'Open Sans';
+font-style: italic;
+font-weight: 400;
+src: url(../fonts/OpenSans-Italic.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+font-family: 'Open Sans';
+font-style: normal;
+font-weight: 600;
+src: url(../fonts/OpenSans-SemiBold.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+font-family: 'Open Sans';
+font-style: italic;
+font-weight: 600;
+src: url(../fonts/OpenSans-SemiBoldItalic.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+font-family: 'Open Sans';
+font-style: normal;
+font-weight: 700;
+src: url(../fonts/OpenSans-Bold.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+font-family: 'Open Sans';
+font-style: italic;
+font-weight: 700;
+src: url(../fonts/OpenSans-BoldItalic.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+font-family: 'Open Sans';
+font-style: normal;
+font-weight: 800;
+src: url(../fonts/OpenSans-ExtraBold.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+font-family: 'Open Sans';
+font-style: italic;
+font-weight: 800;
+src: url(../fonts/OpenSans-ExtraBoldItalic.ttf); /* Путь к файлу со шрифтом */
+}
+
+/* Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,500;1,700;1,900&display=swap');
+
+@font-face {
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+src: url(../fonts/Roboto-Regular.ttf); /* Путь к файлу со шрифтом */
+}
+@font-face {
+font-family: 'Roboto';
+font-style: italic;
+font-weight: 400;
+src: url(../fonts/Roboto-Italic.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+src: url(../fonts/Roboto-Medium.ttf); /* Путь к файлу со шрифтом */
+}
+@font-face {
+font-family: 'Roboto';
+font-style: italic;
+font-weight: 500;
+src: url(../fonts/Roboto-MediumItalic.ttf); /* Путь к файлу со шрифтом */
+}
+
+@font-face {
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 700;
+src: url(../fonts/Roboto-Bold.ttf); /* Путь к файлу со шрифтом */
+}
+@font-face {
+font-family: 'Roboto';
+font-style: italic;
+font-weight: 700;
+src: url(../fonts/Roboto-BoldItalic.ttf); /* Путь к файлу со шрифтом */
+}
+@font-face {
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 900;
+src: url(../fonts/Roboto-Black.ttf); /* Путь к файлу со шрифтом */
+}
+@font-face {
+font-family: 'Roboto';
+font-style: italic;
+font-weight: 900;
+src: url(../fonts/Roboto-BoldItalic.ttf); /* Путь к файлу со шрифтом */
+}

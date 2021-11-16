@@ -1,0 +1,160 @@
+{% extends 'index.html' %}
+{% block title %}
+<title>Форумы - обсуждение</title>
+{% endblock %}
+{% block content %}
+{% load profile_tags %}
+<div class="container">
+    <div class="forum-navi">
+        <a href="{% url 'main:index' %}">Главная</a>
+        <span>&#8250;</span>
+        <a href="{% url 'forum:forum' %}">Форум</a>
+        <span>&#8250;</span>
+        <a class="active" href="{% url 'forum:forumTop' forumTop.id %}">{{forumTop.name}}</a>
+    </div>
+    <p class="java-write-message create-message">Создать пост</p>
+    
+    <div class="forum-top__pagination">
+        {% include '../pagination.html' %}
+    </div> 
+    <div class="forum-top">
+        <div class="forum-titles">
+            <p>Автор</p>
+            <p>Тема</p>
+            <p>Кол-во постов</p>
+        </div>
+        
+        
+        {% for forumMiddle in object_list  %}
+        
+        <div class="forum-block">
+            <a class="block-img"> <img src="{{forumMiddle.user.image_small.url}}" alt=""> <p class="author">{{forumMiddle.user.username}}</p></a>
+            <a class="block-text" href="{% url 'forum:forumMiddle' forumTop.id forumMiddle.id %}">{{forumMiddle.name}}</a>
+            <p>{{forumMiddle.post_count}}</p>
+        </div>
+        
+        {% endfor %}
+
+        
+
+    </div>
+    <div class="forum-top__pagination">
+        {% include '../pagination.html' %}
+    </div> 
+
+
+
+</div>
+
+{% endblock %}
+{% block beforewrapper %}
+<div class="forum-overlay">
+    <div class="popup">
+        <div class="popup-header">
+            <p>Новый пост</p>
+            <div class="close-popup"><i class="fas fa-times"></i></div>
+        </div>
+        {% if  paginator.count|divisibleby:"10" %}
+            {% if paginator.count == 0 %}
+            <form method="POST" action="{% url 'forum:forumTop' forumTop.id  %}?page={{paginator.num_pages }}" enctype="multipart/form-data">
+            {% else %}
+            <form method="POST" action="{% url 'forum:forumTop' forumTop.id  %}?page={{paginator.num_pages|add:'1' }}" enctype="multipart/form-data">
+            {% endif %}
+        {% else %}
+        <form method="POST" action="{% url 'forum:forumTop' forumTop.id  %}?page={{paginator.num_pages}}" enctype="multipart/form-data">
+        {% endif %}
+
+
+        
+
+
+            {% csrf_token %}
+            {{form2.media}}
+            <p class="tittle">Заголовок:</p>
+            <div class="form-tittle">{{form.name}}</div>
+            <p class="tittle">Сообщение:</p>
+            <div class="form-ckeditor">{{form2.message}}</div>
+            <div class="popup-submit">
+                <input type="submit" id="submit-message" value="Отправить сообщение">
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+<script>
+
+
+    $('.java-write-message').click(function(){
+        $('.wrapper').css('filter','brightness(60%)');
+        $('.forum-overlay').fadeIn();
+        //$(".overlay").addClass('disabled');
+        var elem = document.getElementById('cke_1_resizer');
+        elem.style.display = "none";
+    });
+    
+    $('.close-popup').click(function(){
+        $('.forum-overlay').fadeOut();
+        $('.wrapper').css('filter','none');
+        $('header').css('filter','none');
+        
+    })
+    /*$('#submit-message').click(function(){
+        $('.forum-overlay').fadeOut();
+        $('.wrapper').css('filter','none');
+        $('header').css('filter','none');
+        
+    })*/
+   /* $(document).mouseup(function (e){
+        var popup = $('.popup');
+        if (e.target!=popup[0]&&popup.has(e.target).length === 0){
+            $('.forum-overlay').fadeOut();
+            $('.wrapper').css('filter','none');
+            $('header').css('filter','none');
+        }
+    })*/ 
+
+
+    
+</script>
+<script>
+
+    CKEDITOR.config.resize_enabled = 'false'; 
+
+    CKEDITOR.on( 'dialogDefinition', function( ev ) {
+        ev.data.definition.resizable = CKEDITOR.DIALOG_RESIZE_NONE;
+        
+    });
+
+    
+    CKEDITOR.on( 'dialogDefinition', function( ev ) {
+        // Take the dialog window name and its definition from the event data.
+        var dialogName = ev.data.name;
+        var dialogDefinition = ev.data.definition;
+    
+        
+    
+        if ( dialogName == 'image' )
+            {
+                
+                // Get a reference to the "Link Info" tab.
+                var infoTab = dialogDefinition.getContents( 'info' );
+                dialogDefinition.removeContents( 'advanced' );
+                // Set the default value for the URL field.
+                var txtWidth = infoTab.get( 'txtWidth' );
+                txtWidth['default'] = '100%';
+                txtWidth['style'] = 'display: none';
+                var txtWidth = infoTab.get( 'txtHeight' );
+                txtWidth['default'] = '100%';
+                txtWidth['style'] = 'display: none';
+            }	
+    });
+
+ 
+    var elem = document.getElementById('cke_1_resizer');
+
+    elem.style.display = "none";
+
+</script>
+{% endblock %}

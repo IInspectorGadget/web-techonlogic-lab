@@ -1,0 +1,276 @@
+{% extends 'index.html' %}
+{% block title%}
+<title>{{new.title}}</title>
+{% endblock %}
+{% block content %}
+{% load news_tags %}
+
+    <div class="container">
+        <div class="news-detail">
+            <!-- <div class="news-rating">
+                <p></p>
+            </div> -->
+            {% checkUserLike new user.id as check %}
+            <div class="news-content">
+                <div class="news-likes">
+                    {% if  check == "green" %}
+                        <span data-action="like" data-type="news" data-id="{{ new.id }}" id="like" class="news-arrow fas fa-chevron-up like" href=""></span>
+                    {% else %}
+                        <span data-action="like" data-type="news" data-id="{{ new.id }}" id="like" class="news-arrow fas fa-chevron-up" href=""></span>
+
+                    {% endif %}
+                    
+                    <span class="news-like-count">{{ new.votes.sum_rating }}</span>
+                    {% if check == "red"%}
+                    <span data-action="dislike" data-type="news" data-id="{{ new.id }}" id="dislike"  class="news-arrow fas fa-chevron-down dislike" href=""></span>
+                    {% else %}
+                    <span data-action="dislike" data-type="news" data-id="{{ new.id }}" id="dislike"  class="news-arrow fas fa-chevron-down" href=""></span>
+                    {% endif %}
+                </div>
+                
+                <div class="news-heading">
+                    <h1 class="news-title">{{new.title}}</h1>
+
+                    {% if user.is_authenticated  %}
+                    {% if news.author.id == user.id or perms.news.edit_news %}
+                    <a class="news-add" href="{% url 'news:newsEdit' new.id %}">Редактировать новость</a>
+                    {% endif %}
+                    {% endif %}
+                    <div class="news-mobile">
+                        {% if  check == "green" %}
+                            <span data-action="like" data-type="news" data-id="{{ new.id }}" id="like" class="news-arrow far fa-plus-square like" href=""></span>
+                        {% else %}
+                            <span data-action="like" data-type="news" data-id="{{ new.id }}" id="like" class="news-arrow far fa-plus-square" href=""></span>
+                        {% endif %}
+                        <span class="news-like-count">{{ new.votes.sum_rating }}</span>
+                        {% if check == "red"%}
+                        <span data-action="dislike" data-type="news" data-id="{{ new.id }}" id="dislike"  class="news-arrow far fa-minus-square dislike" href=""></span>
+                        {% else %}
+                        <span data-action="dislike" data-type="news" data-id="{{ new.id }}" id="dislike"  class="news-arrow far fa-minus-square" href=""></span>
+                        {% endif %}
+                    </div>
+                </div>
+                {{new.text|safe}}
+            </div>
+        </div>
+
+        <div class="comments-list">
+            <div class="comments">
+                <h3>Комментарии ({{new.message_count}})</h3>
+                {% for comment in object_list %}
+                    <div class="comment-row">
+                        <div class="comment-wrapper">
+                            <div class="user-details">
+                                <div class="user-avatar">
+                                    <a href="{% url 'profile:profile' comment.author.slug %}">
+                                        <img src="{{comment.author.image_small.url}}" alt="">
+                                    </a>
+                                </div>
+                                <div class="comment-meta">
+                                    <a href="{% url 'profile:profile' comment.author.slug %}" class="user-nickname">{{comment.author.username}}</a>
+                                    <p class="date"><time>{{comment.date_pub}}</time></p>
+                                </div>
+                                <div class="comment-controls">
+                                    <div class="voting">
+                                        <div class="comment-likes">
+                                            {% checkUserLike comment comment.author.id as ch %}
+                                            {% if  ch == "green" %}
+                                                <span data-action="like-comment" data-type="comments" data-id="{{ comment.id }}" id="like-comment" class="news-arrow far fa-plus-square like" href=""></span>
+                                            {% else %}
+                                                <span data-action="like-comment" data-type="comments" data-id="{{ comment.id }}" id="like-comment" class="news-arrow far fa-plus-square" href=""></span>
+                                            {% endif %}
+                                            <span class="news-like-count-comment" data-id="{{ comment.id }}">{{ comment.votes.sum_rating }}</span>
+                                            {% if ch == "red"%}
+                                            <span data-action="dislike-comment" data-type="comments" data-id="{{ comment.id  }}" id="dislike-comment"  class="news-arrow far fa-minus-square dislike" href=""></span>
+                                            {% else %}
+                                            <span data-action="dislike-comment" data-type="comments" data-id="{{ comment.id  }}" id="dislike-comment"  class="news-arrow far fa-minus-square" href=""></span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                <p>{{comment.text|safe}}</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="forum-top__pagination">
+                        {% include '../pagination.html' %}
+                    </div> 
+                {% endfor %}
+
+                {% if user.is_authenticated %}
+                
+                    <form method="POST" action="{% url 'news:newsDetail' new.id %}?page={{page_obj.number}}">
+                        {% csrf_token %}
+                        {{form.media}}
+                        <p class="form-title">Написать сообщение:</p>
+                        {{form.text}}
+                        <input class='form-btn' type="submit">
+                    </form>
+
+                {% else %}
+                <p class="message-login"> <a href="{% url 'accounts:login' %}?next={{request.path}}">Авторизуйтесь,</a>  чтобы принять участие в обсуждении.</p>
+                {% endif %}
+                
+            </div>
+            
+        </div>
+        
+        
+    </div>
+
+
+<script>  CSRF_TOKEN = "{{ csrf_token}}";</script>
+
+<script>
+    function likeComments()
+    {
+        var like = $(this);
+        var type = like.data('type');
+        var pk = like.data('id');
+        var action = like.data('action');
+        var dislike = $('#dislike');
+        if($('[data-action="like-comment"][data-id =' + pk +']').hasClass("like")){
+            $('[data-action="like-comment"][data-id =' + pk +']').removeClass("like")
+        } else {
+            $('[data-action="like-comment"][data-id =' + pk +']').addClass("like")
+            $('[data-action="dislike-comment"][data-id =' + pk +']').removeClass("dislike")
+        }
+        
+        $.ajax({
+            url : "/news/" + type + "/" + pk + "/" + action + "/",
+            type : 'POST',
+            data : { 
+                'obj' : pk,
+                csrfmiddlewaretoken: '{{ csrf_token }}' ,
+            },
+            headers: { 'X-CSRF-TOKEN': CSRF_TOKEN  },
+
+            success : function (json) {
+                $('[class="news-like-count-comment"][data-id =' + pk +']').text(json.sum_rating)
+                //like.find("[data-count='like']").text(json.like_count);
+                //dislike.find("[data-count='dislike']").text(json.dislike_count);
+            }
+        });
+ 
+        return false;
+    }
+ 
+function dislikeComments()
+{
+    var dislike = $(this);
+    var type = dislike.data('type');
+    var pk = dislike.data('id');
+    var action = dislike.data('action');
+    var like = dislike.prev();
+    
+    if($('[data-action="dislike-comment"][data-id =' + pk +']').hasClass("dislike")){
+        $('[data-action="dislike-comment"][data-id =' + pk +']').removeClass("dislike")
+    } else {
+        $('[data-action="dislike-comment"][data-id =' + pk +']').addClass("dislike")
+        $('[data-action="like-comment"][data-id =' + pk +']').removeClass("like")
+    }
+
+    $.ajax({
+        url : "/news/" + type +"/" + pk + "/" + action + "/",
+        type : 'POST',
+        data : { 
+            'obj' : pk,
+            csrfmiddlewaretoken: '{{ csrf_token }}' ,
+        },
+ 
+        success : function (json) {
+            $('[class="news-like-count-comment"][data-id =' + pk +']').text(json.sum_rating)
+            //dislike.find("[data-count='dislike']").text(json.dislike_count);
+            //like.find("[data-count='like']").text(json.like_count);
+        }
+    });
+ 
+    return false;
+}
+ 
+// Подключение обработчиков
+$(function() {
+    $('[data-action="like-comment"]').click(likeComments);
+    $('[data-action="dislike-comment"]').click(dislikeComments);
+});
+</script>
+
+<script>
+    function like()
+    {
+        var like = $('#like');
+        var type = like.data('type');
+        var pk = like.data('id');
+        var action = like.data('action');
+        var dislike = $('#dislike');
+        if($('[data-action="like"]').hasClass("like")){
+            $('[data-action="like"]').removeClass("like")
+        } else {
+            $('[data-action="like"]').addClass("like")
+            $('[data-action="dislike"]').removeClass("dislike")
+        }
+        
+     
+        $.ajax({
+            url : "/" + type +"/" + pk + "/" + action + "/",
+            type : 'POST',
+            data : { 
+                'obj' : pk,
+                csrfmiddlewaretoken: '{{ csrf_token }}' ,
+            },
+            headers: { 'X-CSRF-TOKEN': CSRF_TOKEN  },
+
+            success : function (json) {
+                $('.news-like-count').text(json.sum_rating)
+                //like.find("[data-count='like']").text(json.like_count);
+                //dislike.find("[data-count='dislike']").text(json.dislike_count);
+            }
+        });
+ 
+        return false;
+    }
+ 
+function dislike()
+{
+    var dislike = $(this);
+    var type = dislike.data('type');
+    var pk = dislike.data('id');
+    var action = dislike.data('action');
+    var like = dislike.prev();
+ 
+
+    if($('[data-action="dislike"]').hasClass("dislike")){
+        $('[data-action="dislike"]').removeClass("dislike")
+    } else {
+        $('[data-action="dislike"]').addClass("dislike")
+        $('[data-action="like"]').removeClass("like")
+    }
+
+    $.ajax({
+        url : "/" + type +"/" + pk + "/" + action + "/",
+        type : 'POST',
+        data : { 
+            'obj' : pk,
+            csrfmiddlewaretoken: '{{ csrf_token }}' ,
+        },
+ 
+        success : function (json) {
+            $('.news-like-count').text(json.sum_rating)
+            //dislike.find("[data-count='dislike']").text(json.dislike_count);
+            //like.find("[data-count='like']").text(json.like_count);
+        }
+    });
+ 
+    return false;
+}
+ 
+// Подключение обработчиков
+$(function() {
+    $('[data-action="like"]').click(like);
+    $('[data-action="dislike"]').click(dislike);
+});
+</script>
+{% endblock %}

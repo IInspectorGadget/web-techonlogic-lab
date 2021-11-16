@@ -1,0 +1,89 @@
+{% extends 'index.html' %}
+{% block title%}
+<title>Редактирование профиля</title>
+{% endblock %}
+{% block content %}
+{% load profile_tags %}
+    <div class="container">
+        <a href="{% url 'profile:profile' user.slug %}"><i class="fas fa-arrow-left"><span>Назад</span></i></a>
+        <form method="POST" action="{% url 'profile:edit' user.slug|lower %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="profile profile-edit">
+
+            <div class="profile-left">
+                <div class="image profile-border">
+                    <img class="" src="{{user.image_small.url}}" alt="">
+                </div>
+
+                <div class="requestFriend">
+                    <input class="requestFriend-title" type="submit" value="СОХРАНИТЬ" >
+                </div>
+                <div class="change_password"><a href="{% url 'accounts:password_change' %}">Сменить пароль</a></div>
+
+            </div>
+
+            <div class="profile-right profile-right-edit">
+                <div class="profle-directory profile-border profle-directory-edit">
+                    <div class="profile-container">
+                        <div class="profile-name "><span>Имя:</span><p>{{form.first_name}}</p>{{form.first_name.errors}}
+                            <span>Фамилия:</span><p>{{form.last_name}}</p>{{form.last_name.errors}}
+                        
+                            <span>Отчество:</span><p>{{form.patronymic}}</p>{{form.patronymic.errors}}
+
+                        </div>
+                        
+                    <div class="profile-birth__day">
+                        <span>Дата рождения:</span>
+                        <p>{{form.dateBirth}}</p>{{form.dateBirth.errors}}
+                    </div>
+                    <div class="profile-gender">
+                        <span>Пол:</span>
+                        <p>{{form.gender}}</p>{{form.gender.errors}}
+                    </div>
+                    <div class="profile-image">
+                        <span>Изоображене профиля:</span>
+                        <p>{{form.image}}</p>{{form.image.errors}}
+                    </div>
+                    <!-- <div class="profile-showRealName">
+                        <span>Показывать реальное имя и фамилию:</span>
+                        <p>{{form.showRealName}}</p>{{form.showRealName.errors}}
+                    </div>
+                    <div class="profile-showUsername">
+                        <span>Показывать псевдоним:</span>
+                        <p>{{form.showUsername}}</p>{{form.showUsername.errors}}
+                    </div> -->
+                    </div>
+                </div>
+
+
+
+                <div class="profile-contacts profile-border">
+                    <div class="profile-container">
+                        <span>Email:</span><p>{{form.email}}</p>{{form.email.errors}}
+                        <span>Телефон:</span><p>{{form.phone}}</p>{{form.phone.errors}}
+                        <span>Адрес:</span><p>{{form.addres}}</p>{{form.addres.errors}}
+                        <!-- <span>Организация:</span><p>{{form.organization}}</p>{{form.organization.errors}} -->
+                        <span>Skype:</span><p>{{form.skype}}</p>{{form.skype.errors}}
+                        <span class="get_news-profile-edit">Согласие на рассылку: {{form.get_news}}</span> 
+                        
+                    </div>
+                </div>
+            </div>
+
+
+
+            
+           
+
+        </div>
+
+        </form>
+
+
+        
+    </div>
+
+
+    
+
+{% endblock %}

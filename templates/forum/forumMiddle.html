@@ -1,0 +1,135 @@
+{% extends 'index.html' %}
+{% block title%}
+<title>Форумы - обсуждение</title>
+{% endblock %}
+{% block content %}
+{% load profile_tags %}
+<div class="container">
+    <div class="forum-middle">
+
+        <div class="forum-navi">
+            <a href="{% url 'main:index' %}">Главная</a>
+            <span>&#8250;</span>
+            <a href="{% url 'forum:forum' %}">Форум</a>
+            <span>&#8250;</span>
+            <a href="{% url 'forum:forumTop' forumMiddle.forumTop.id %}">{{forumMiddle.forumTop.name}}</a>
+            <span>&#8250;</span>
+            <a class="active" href="{% url 'forum:forumMiddle' forumMiddle.forumTop.id forumMiddle.id %}">{{forumMiddle.name}}</a>
+        </div>
+
+        <div class="forum-titles">{{forumMiddle.name}}</div>
+        <div class="forum-meta">
+            <i class="far fa-user"></i>
+            <a href="{% url 'profile:profile' forumMiddle.user.slug %}">{{forumMiddle.user.username}}</a>
+            <span class="dot">&middot;</span>
+            <i class="far fa-clock"></i>
+            <span class="date">{{forumMiddle.date_create}}</span> 
+        </div>
+
+        <div class="forum-middle__pagination">
+            {% include '../pagination.html' %}
+        </div> 
+
+        {% for forumMessage in object_list %}
+        <div class="forum-box">
+
+            <div  class="box-author">
+                <a class="author" href="{% url 'profile:profile' forumMessage.user.slug %}">
+                    <img src="{{forumMessage.user.image_small.url}}" alt="">
+                    <p class="username">{{forumMessage.user.username}}</p>
+                </a>
+            
+                <span></span>
+            </div>
+
+            <div class="box-message">
+                <div class="message-meta">
+                    <div class="date">{{forumMessage.date_pub}}</div>
+                    <div class="number">#{{forloop.counter}}</div>
+                </div>
+                <div class="message">
+                    {{forumMessage.message|safe}}
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+        <div class="forum-middle__pagination">
+            {% include '../pagination.html' %}
+        </div> 
+
+        {% if user.is_authenticated %}
+
+        <div class="forum-box">
+
+            <div  class="box-author">
+                <a class="author" href="{% url 'profile:profile' forumMiddle.user.slug %}">
+                    <img src="{{user.image_small.url}}" alt="">
+                    <p class="username">{{user.username}}</p>
+                </a>
+            
+                <span></span>
+            </div>
+            <div class="box-message">
+                <form method="POST" action="{% url 'forum:forumMiddle' forumMiddle.forumTop.id forumMiddle.id %}?page={{page_obj.number}}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form.media}}
+                    <div class="ckeditor">{{form.message}}</div>
+                    <input class="" type="submit" value="Отправить сообщение" >
+                </form>
+            </div>
+            
+        </div>
+        {% else %}
+            <p class="comments-posting-message"> <a href="{% url 'accounts:login' %}?next={{request.path}}">Авторизуйтесь,</a> чтобы принять участие в обсуждении.</p>
+        {% endif %}
+
+  
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    CKEDITOR.on( 'dialogDefinition', function( ev ) {
+        ev.data.definition.resizable = CKEDITOR.DIALOG_RESIZE_NONE;
+    });
+
+    
+    CKEDITOR.on( 'dialogDefinition', function( ev ) {
+        // Take the dialog window name and its definition from the event data.
+        var dialogName = ev.data.name;
+        var dialogDefinition = ev.data.definition;
+    
+        
+    
+        if ( dialogName == 'image' )
+            {
+                // Get a reference to the "Link Info" tab.
+                var infoTab = dialogDefinition.getContents( 'info' );
+                dialogDefinition.removeContents( 'advanced' );
+                // Set the default value for the URL field.
+                var txtWidth = infoTab.get( 'txtWidth' );
+                txtWidth['default'] = '100%';
+                txtWidth['style'] = 'display: none';
+                var txtWidth = infoTab.get( 'txtHeight' );
+                txtWidth['default'] = '100%';
+                txtWidth['style'] = 'display: none';
+            }	
+    });
+</script>
+
+    
+</div>
+{% endblock %}
