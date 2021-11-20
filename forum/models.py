@@ -54,7 +54,7 @@ class ForumMiddle(models.Model):
 
 class ForumMessage(models.Model):
     forumMiddle = models.ForeignKey(ForumMiddle, on_delete=models.CASCADE, verbose_name="Подтема")
-    message = RichTextUploadingField("Сообщение" ,config_name='forum_message', max_length=240)
+    message = RichTextUploadingField("Сообщение" ,config_name='forum_message', max_length=1100)
     user = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user), verbose_name="Автор")
     date_pub = models.DateTimeField("Дата создания", default = timezone.now)
     
