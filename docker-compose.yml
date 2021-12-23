@@ -51,7 +51,18 @@ services:
       depends_on:
         - db2
         - swagger_migration
-    
+        - creat_admin2
+    creat_admin2:
+      build:
+          context: .
+          dockerfile: Dockerfile_Swagger
+      command: ./manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'danilklin17@gmail.com', 'admin')"
+      volumes:
+          - ./app/:/usr/src/app/
+          - media:/app/media
+      depends_on:
+        - db2
+        - swagger_migration
     swagger_migration:
       build:
           context: .
