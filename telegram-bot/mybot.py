@@ -52,7 +52,7 @@ async def command_start(message: types.Message):
         await CreateNews.title.set()
         await bot.send_message(message.from_user.id, "Введите загаловок:", reply_markup=thirdMenu)
     else:
-        await bot.send_message(message.from_user.id, "Вы должны авторезироваться", reply_markup=secondMenu)
+        await bot.send_message(message.from_user.id, "Вы должны авторезироваться", reply_markup=mainMenu)
 
 @dp.message_handler(state="*", commands = 'отмена')
 @dp.message_handler(Text(equals='отмена', ignore_case = True), state="*")
@@ -80,7 +80,6 @@ async def load_descript(message: types.Message, state: FSMContext):
 
 @dp.message_handler(content_types=['photo'],state=CreateNews.image)
 async def load_image(message: types.Message, state: FSMContext):
-    print(message)
     async with state.proxy() as data:
 
         file_info = await bot.get_file(message.photo[-1].file_id)
