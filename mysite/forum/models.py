@@ -7,6 +7,7 @@ from django.utils import timezone
 def get_sentinel_user():
     return get_user_model().objects.get_or_create(username='Удалён')[0]
 
+#Загаловки
 class ForumTitle(models.Model):
     name = models.CharField("Название", max_length = 50)
     def __str__(self):
@@ -15,6 +16,7 @@ class ForumTitle(models.Model):
         verbose_name = 'Раздел'
         verbose_name_plural = 'Разделы'
 
+#Темы
 class ForumTop(models.Model):
     forumTitle = models.ForeignKey(ForumTitle, on_delete=models.CASCADE, verbose_name="Раздел")
     name = models.CharField("Название", max_length = 50)
@@ -31,6 +33,7 @@ class ForumTop(models.Model):
         verbose_name = 'Тему'
         verbose_name_plural = 'Темы'
 
+#под-темы
 class ForumMiddle(models.Model):
     forumTop = models.ForeignKey(ForumTop, on_delete=models.CASCADE, verbose_name="Тема")
     name = models.CharField("Название", max_length = 50)
@@ -51,7 +54,8 @@ class ForumMiddle(models.Model):
     class Meta:
         verbose_name = 'Подтему'
         verbose_name_plural = 'Подтемы'
-
+        
+#сообщения
 class ForumMessage(models.Model):
     forumMiddle = models.ForeignKey(ForumMiddle, on_delete=models.CASCADE, verbose_name="Подтема")
     message = RichTextUploadingField("Сообщение" ,config_name='forum_message', max_length=1100)

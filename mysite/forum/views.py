@@ -6,11 +6,13 @@ from django.views.generic.list import ListView, MultipleObjectMixin
 from forum.forms import ForumMessageForm, ForumMiddleForm
 from forum.models import ForumMessage, ForumMiddle, ForumTitle, ForumTop
 
+#отображение разделов форума
 class ForumTitleView(ListView):
     model = ForumTitle
     template_name = 'forum/forumTitle.html'
     context_object_name = 'forumTitles'
 
+#отображение тем форума + создание темы
 class ForumTopView(FormView, DetailView, MultipleObjectMixin):
     model = ForumTop
     template_name = "forum/forumTop.html"
@@ -46,6 +48,7 @@ class ForumTopView(FormView, DetailView, MultipleObjectMixin):
         context = super(ForumTopView, self).get_context_data(object_list=object_list, form2=self.form2, **kwargs)
         return context
 
+#отображение под-тем форума + создание коментариев
 class ForumMiddleView(FormView, DetailView, MultipleObjectMixin):
     model = ForumMiddle
     template_name = "forum/forumMiddle.html"

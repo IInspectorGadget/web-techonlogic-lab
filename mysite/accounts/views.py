@@ -9,12 +9,13 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth import views as a
 from accounts.forms import MyPasswordChangeForm, MySetPasswordForm
 
+#Для авторизации
 class MyLoginView(LoginView):
     form_class = MyAuthenticationForm
   
 class MyRegisterView():
     pass
-
+#для востановления пароля
 class MyPasswordResetView(a.PasswordResetView):
     success_url = reverse_lazy('accounts:password_reset_done')
     title = 'Сброс пароля'
@@ -38,6 +39,7 @@ class MyPasswordChangeView(a.PasswordChangeView):
 class MyPasswordChangeDoneView(a.PasswordChangeDoneView):
     title = 'Пароль успешно изменён'
 
+#для регистрации
 class RegisterView(View):
     def get(self, request):
         userform = UserForm()

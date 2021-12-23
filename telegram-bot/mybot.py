@@ -7,7 +7,7 @@ from aiogram.dispatcher import Dispatcher, FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
 from aiogram.utils import executor
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
 
@@ -18,6 +18,7 @@ dp = Dispatcher(bot, storage=storage)
 
 userIsAut = False
 
+#проверка авторегистрации
 def check_user_auth(user_id):
     global userIsAut
     try: 
@@ -39,6 +40,7 @@ async def on_startup(_):
     print("Bot start")
 
 
+#создание новости
 class CreateNews(StatesGroup):
     title = State()
     header = State()
@@ -128,11 +130,7 @@ async def load_username(message: types.Message, state: FSMContext):
 
 
 
-
-
-
-
-
+#авторизация
 class Login(StatesGroup):
     username = State()
     password = State()

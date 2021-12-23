@@ -36,8 +36,6 @@ class FriendRequestAdmin(admin.ModelAdmin):
     list_display = ("to_user", "from_user")
     search_fields = ("to_user__username", "from_user__username")
 
-
-
 class TelegramAdmin(admin.ModelAdmin):
     model = Telegram
 

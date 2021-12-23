@@ -15,6 +15,7 @@ class CustomUserChangeForm(UserChangeForm):
         model = User
         fields = ('email',)
 
+#форма пользователя основная
 class UserForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={"class":"formBtn", "placeholder":"Имя"}))
     email = forms.EmailField(widget=forms.TextInput(attrs={"class":"formBtn", "placeholder":"Email"}))
@@ -32,6 +33,7 @@ class UserForm(forms.ModelForm):
             user.save()
         return user 
 
+#форма для редактирования данных пользователя
 class ProfileEditForm(forms.ModelForm):
     addres = forms.CharField(required =False ,widget=forms.Textarea(attrs={'class':'contacts-textarea'}))
     phone = forms.CharField(required =False,error_messages={'phone': 'Please enter your name'})

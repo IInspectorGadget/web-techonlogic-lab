@@ -29,7 +29,7 @@ from news.models import LikeDislike, News, NewsComments
 from userprofile.models import User
 from django.contrib.contenttypes.models import ContentType
 
-
+#отображение списка новостей
 class NewsListView(ListView):
     model = News
     template_name = 'news/news.html'
@@ -37,6 +37,7 @@ class NewsListView(ListView):
 
     paginate_by = 15
 
+#отображение новости + добавление коментариев 
 class NewsDetailView(FormView, DetailView, MultipleObjectMixin):
     model = News
     template_name = "news/newsDetail.html"
@@ -62,7 +63,7 @@ class NewsDetailView(FormView, DetailView, MultipleObjectMixin):
     def get_success_url(self):
         return "%s?page=%s" % (reverse('news:newsDetail', args=[self.kwargs.get('id')]), self.request.GET.get("page"))
 
-
+#создание новости
 class NewsFormView(PermissionRequiredMixin, CreateView):
     model = News
     form_class = NewsAddForm
@@ -81,7 +82,7 @@ class NewsFormView(PermissionRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('news:news')
 
-
+#редактирование новости
 class NewsEditView(PermissionRequiredMixin ,UpdateView):
     model = News
     form_class = NewsAddForm

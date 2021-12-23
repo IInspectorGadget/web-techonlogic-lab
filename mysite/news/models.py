@@ -16,6 +16,7 @@ from userprofile.models import User
 def get_sentinel_user():
     return get_user_model().objects.get_or_create(username='Удалён')[0]
 
+#модель новостей
 class News(models.Model):
     title = models.CharField("Загаловок", max_length = 115)
     small_text = RichTextUploadingField("Краткое описание",config_name='smallText', max_length=200)
@@ -45,7 +46,8 @@ class News(models.Model):
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
         ordering = ['-date_pub']
-        
+
+#модель коментариев
 class NewsComments(models.Model):
     news = models.ForeignKey('News', on_delete=models.CASCADE, verbose_name = 'Новость')
     votes = GenericRelation('LikeDislike', related_query_name='news')
@@ -63,7 +65,7 @@ class NewsComments(models.Model):
         verbose_name  = "Коментарий"
         verbose_name_plural = "Коментарии"
 
-
+#универсальные модель для лайков и дизлайков (кмоентариев и новостей)
 class LikeDislikeManager(models.Manager):
     use_for_related_fields = True
  

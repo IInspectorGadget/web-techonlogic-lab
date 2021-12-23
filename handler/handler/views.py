@@ -9,7 +9,9 @@ from base64 import b64encode as enc64
 from base64 import b64decode as dec64 
 from PIL import Image
 
+#проверка данных для авторизации с телеграма
 def telegramPassword(request):
+    #подключаемся к базе данных
     try: 
         conn = psycopg2.connect(dbname='hello_django_dev', user='hello_django', 
                         password='hello_django', host='db', port = '5432')
@@ -40,44 +42,51 @@ def telegramPassword(request):
 
     return HttpResponse(False)
 
+
+#добавление новости через телеграм
 @csrf_exempt
 def addNews(request):
-        conn =  psycopg2.connect(dbname='hello_django_dev', user='hello_django', 
-                    password='hello_django', host='db', port = '5432')
+        try: 
+            #подключаемся к базе данных
+            conn =  psycopg2.connect(dbname='hello_django_dev', user='hello_django', 
+                        password='hello_django', host='db', port = '5432')
 
 
-        cursor = conn.cursor()
+            cursor = conn.cursor()
 
-        title = request.POST.get("title")
-        small_text = request.POST.get("small_text")
-        text = request.POST.get("text")
-        date_pub = datetime.now()
-        image_id = request.POST.get("image_id") + '.jpg'
+            title = request.POST.get("title")
+            small_text = request.POST.get("small_text")
+            text = request.POST.get("text")
+            date_pub = datetime.now()
+            image_id = request.POST.get("image_id") + '.jpg'
+            
+            #получаем изоображение и сохраняем
+            image = BytesIO(dec64(request.POST.get("image")))
+            pillow = Image.open(image)
+            pillow.save(f'media/{image_id}')
 
-        image = BytesIO(dec64(request.POST.get("image")))
-        pillow = Image.open(image)
-        pillow.save(f'media/{image_id}')
-
-        image = 'default.jpg'
+            image = 'default.jpg'
 
 
-        header_image = image_id
-        message_count = 0
-        in_header = False
+            header_image = image_id
+            message_count = 0
+            in_header = False
 
-        if request.POST.get("header").lower() == 'да':
-            in_header = True
+            if request.POST.get("header").lower() == 'да':
+                in_header = True
 
-        cursor.execute("SELECT user_id FROM userprofile_telegram WHERE telegram_id = %s" % request.POST.get("id"))
-        
-        author_id = cursor.fetchall()[0][0]
+            cursor.execute("SELECT user_id FROM userprofile_telegram WHERE telegram_id = %s" % request.POST.get("id"))
+            
+            author_id = cursor.fetchall()[0][0]
 
-        news = (title, small_text, text, date_pub, image_id, header_image, author_id, message_count, in_header)
-        sql = """
-            INSERT INTO news_news(title, small_text, text, date_pub, image, header_image, author_id, message_count, in_header) 
-            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """
+            news = (title, small_text, text, date_pub, image_id, header_image, author_id, message_count, in_header)
+            sql = """
+                INSERT INTO news_news(title, small_text, text, date_pub, image, header_image, author_id, message_count, in_header) 
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
 
-        cursor.execute(sql, news)
-        conn.commit()
+            cursor.execute(sql, news)
+            conn.commit()
+        except:
+            return HttpResponse(False)
         return HttpResponse(True)

@@ -10,6 +10,7 @@ from imagekit.processors import ResizeToFit, Adjust,ResizeToFill
 from django.contrib.auth.models import AbstractUser
 from imagekit.models.fields import ImageSpecField
 
+#модель пользователя
 class User(AbstractUser):
     db_table = 'user'
     username = models.CharField('имя пользователя', max_length=150,unique=True, help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
@@ -54,7 +55,7 @@ class User(AbstractUser):
         verbose_name = 'Пользователя'
         verbose_name_plural = 'Пользователи'
 
-
+#модель заявок в друзья
 class FriendRequest(models.Model):
     to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE, verbose_name = "Получатель")
     from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE, verbose_name = "Отправитель")
@@ -66,6 +67,7 @@ class FriendRequest(models.Model):
         verbose_name = 'Запрос в друзья'
         verbose_name_plural = 'Запросы в друзья'
 
+#модель телеграмма
 class Telegram(models.Model):
     user = models.ForeignKey(User, related_name='teluser', on_delete=models.CASCADE, verbose_name = "Пользователь")
     telegram_id = models.IntegerField("Телеграм id", default=0)

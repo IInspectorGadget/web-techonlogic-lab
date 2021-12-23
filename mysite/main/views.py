@@ -6,6 +6,7 @@ from django.views.generic.base import View
 from userprofile.models import User, Telegram
 from django.contrib.auth.hashers import check_password
 
+#отображение главной страницы
 class IndexView(View):
     def get(self, request):
         head_list = News.objects.filter(in_header=True)
@@ -15,19 +16,4 @@ class IndexView(View):
 
         context = {'news_list': news_list,'head_list' : head_list, 'forumMiddle' : forum}
         return render(request,'index.html', context)
-
-
-
-def telegramPassword(request):
-    if request.method == "GET":
-        users = User.objects.filter(username=request.GET['username'])
-        if len(users) == 1:
-            user = users[0]
-            if user.check_password(request.GET['password']):
-                telegram = Telegram()
-                telegram.user = user
-                telegram.telegram_id = request.GET['id']
-                telegram.save()
-                return HttpResponse(True)
-    return HttpResponse(False)
 

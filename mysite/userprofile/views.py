@@ -14,7 +14,7 @@ from userprofile.forms import ProfileEditForm
 
 
 
-
+#отображения профиля пользователя
 class ProfileDetailView(DetailView):
     model = User
     template_name = 'profile/profile.html'
@@ -34,7 +34,7 @@ class ProfileDetailView(DetailView):
         profile_id = request.POST.get('profile_id')
         return HttpResponse()
 
-
+#редактирование данных пользователя
 class ProfileFormView(UpdateView):
     model = User
     slug_url_kwarg = 'username'
@@ -57,7 +57,7 @@ class ProfileFormView(UpdateView):
         return reverse('profile:profile', kwargs={'username' : username.lower()})
 
 
-
+#отправка приглашения в друзья
 def send_friend_request(request, username):
     if (request.user.is_authenticated == False):
         return HttpResponseRedirect("%s?next=%s" % (reverse('accounts:login'),request.path))
@@ -68,6 +68,7 @@ def send_friend_request(request, username):
         frequest, created = FriendRequest.objects.get_or_create(from_user=request.user,to_user=profile)
     return HttpResponseRedirect(reverse('profile:profile', kwargs= {'username' : username.lower()}))
 
+#принятие приглашения в друзья
 def accept_friend_request(request, username):
     from_user = get_object_or_404(User, slug=username)
     frequest = FriendRequest.objects.filter(from_user=from_user, to_user=request.user).first()
@@ -80,13 +81,14 @@ def accept_friend_request(request, username):
     return HttpResponseRedirect(reverse('profile:profile', kwargs= {'username' : request.user.username.lower()}))
 
 
-
+#отказ от приглашения в друзья
 def deny_friend_request(request, username):
 	from_user = get_object_or_404(User, slug=username)
 	frequest = FriendRequest.objects.filter(from_user=from_user, to_user=request.user).first()
 	frequest.delete()
 	return HttpResponseRedirect(reverse('profile:profile', kwargs= {'username' : request.user.username.lower()}))
 
+#удаление друга
 def delete_friend_request(request, username, friend):
     if request.user.slug == username:
         user = get_object_or_404(User, slug=username)
@@ -95,7 +97,7 @@ def delete_friend_request(request, username, friend):
         friend.friends.remove(user)
     return HttpResponseRedirect(reverse('profile:profile', kwargs= {'username' : request.user.username.lower()}))
 
-
+#отображения списка пользователей, у которых имя содержит параметр введёный в строке запроса
 class SearchProfileView(ListView):
     model = User
     template_name = "profile/profileSearch.html"
@@ -111,7 +113,7 @@ class SearchProfileView(ListView):
         return User.objects.all()
 
 
-
+#отображение списка друзей
 class ProfileFriendsView(DetailView, MultipleObjectMixin):
     model = User
     template_name = "profile/profileFriends.html"
