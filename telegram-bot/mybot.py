@@ -113,9 +113,9 @@ async def load_username(message: types.Message, state: FSMContext):
     resultGet = requests.post(url, params)   
 
     if resultGet.text == 'True':
-        await message.reply("Новость успешно добавленна")
+        await bot.send_message(message.from_user.id, "Новость успешно добавленна", reply_markup=secondMenu)
     else:
-        await message.reply("Ошибка")
+        await bot.send_message(message.from_user.id, "Ошибка", reply_markup=secondMenu)
     await state.finish()
 
 
@@ -158,7 +158,7 @@ async def load_password(message: types.Message, state: FSMContext):
     resultGet = requests.get(url, params)
     if resultGet.text == 'True':
         userIsAut = True
-        await message.reply("Вы успешно авторезировались")
+        await bot.send_message(message.from_user.id, "Вы уже успешно авторезировались", reply_markup=secondMenu)
 
     else:
         await message.reply("Авторизация не прошла")
