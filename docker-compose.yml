@@ -1,0 +1,97 @@
+version: '3.8'
+services:
+    site:
+      build:
+        context: .
+        dockerfile: Dockerfile_MySite
+      command: "python manage.py runserver 0.0.0.0:8000"
+      volumes:
+        - ./app/:/usr/src/app/
+        - media:/app/media
+      ports:
+        - 8000:8000
+      depends_on:
+        - db
+        - migration
+    
+    migration:
+      build:
+          context: .
+          dockerfile: Dockerfile_MySite
+      command: python manage.py migrate --noinput
+      volumes:
+          - ./app/:/usr/src/app/
+          - media:/app/media
+      depends_on:
+        - db
+    
+    swagger:
+      build:
+        context: .
+        dockerfile: Dockerfile_Swagger
+      command: "python manage.py runserver 0.0.0.0:8123"
+      volumes:
+        - ./app/:/usr/src/app/
+        - media:/app/media
+      ports:
+        - 8123:8123
+      depends_on:
+        - db2
+        - swagger_migration
+    
+    swagger_migration:
+      build:
+          context: .
+          dockerfile: Dockerfile_Swagger
+      command: python manage.py migrate --noinput
+      volumes:
+          - ./app/:/usr/src/app/
+          - media:/app/media
+      depends_on:
+        - db2
+
+
+    myservices:
+      build:
+        context: .
+        dockerfile: Dockerfile_handler
+      command: python manage.py runserver 0.0.0.0:7000
+      ports:
+        - 7000:7000
+      depends_on:
+        - db
+      volumes:
+        - media:/app/media
+        
+
+    bot:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      command: python telegram-bot/mybot.py
+      links:
+        - myservices
+
+    db:
+      image: postgres:12.0-alpine
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+      environment:
+        - POSTGRES_USER=hello_django
+        - POSTGRES_PASSWORD=hello_django
+        - POSTGRES_DB=hello_django_dev
+    
+    db2:
+      image: postgres:12.0-alpine
+      volumes:
+        - postgres_data2:/var/lib/postgresql/data/
+      environment:
+        - POSTGRES_USER=hello_django
+        - POSTGRES_PASSWORD=hello_django
+        - POSTGRES_DB=hello_django_dev
+
+volumes:
+  postgres_data2:
+  postgres_data:
+  site:
+  media:
