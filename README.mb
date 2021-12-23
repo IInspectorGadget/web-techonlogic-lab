@@ -10,4 +10,4 @@
 
 Запуск: 
 Запустить docker-compose.yml
-Для приложения mysite создать супер пользователя с помощью команды: python manage.py createsuperuser
+Логин и Пароль для входа на сайт: admin

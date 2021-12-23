@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 
 from imagekit.models.fields import ImageSpecField
-from imagekit.processors import ResizeToFit, Adjust,ResizeToFill
+from imagekit.processors import Adjust,ResizeToFill
 
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.auth import get_user_model
