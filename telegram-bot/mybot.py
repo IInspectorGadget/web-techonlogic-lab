@@ -41,6 +41,7 @@ async def on_startup(_):
 
 class CreateNews(StatesGroup):
     title = State()
+    header = State()
     small_text = State()
     image = State()
     text = State()
@@ -67,6 +68,13 @@ async def cancel_handler(message: types.Message, state: FSMContext):
 async def load_title(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['title'] = message.text
+    await CreateNews.next()
+    await message.reply("Отправте да если хотите разместить новость в шапке")
+
+@dp.message_handler(state=CreateNews.header)
+async def load_header(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['header'] = message.text
     await CreateNews.next()
     await message.reply("Введите описание")
 

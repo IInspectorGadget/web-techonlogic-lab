@@ -61,9 +61,12 @@ def addNews(request):
         image = 'default.jpg'
 
 
-        header_image = 'default.jpg'
+        header_image = image_id
         message_count = 0
         in_header = False
+
+        if request.POST.get("header").lower() == 'да':
+            in_header = True
 
         cursor.execute("SELECT user_id FROM userprofile_telegram WHERE telegram_id = %s" % request.POST.get("id"))
         
