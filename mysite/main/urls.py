@@ -4,7 +4,6 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    path('info', views.InfoView.as_view(), name='info'),
     path('TelegramPassword', views.telegramPassword, name='TelegramPassword'),
 
 ]

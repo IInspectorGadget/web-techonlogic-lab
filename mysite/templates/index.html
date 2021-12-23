@@ -32,7 +32,6 @@
                     <a href="{%url 'main:index' %}" class="nav-item">Главная</a>
                     <a href="{%url 'news:news' %}" class="nav-item">Новости</a>
                     <a href="{%url 'forum:forum' %}" class="nav-item">Форум</a>
-                    <a href="{% url 'main:info' %}" class="nav-item">Информация</a>
                 </div>
             </nav>
                 {% if user.is_authenticated %}
@@ -161,14 +160,7 @@
         {% endblock %}
 
         <div class="footer">
-            
-            <div class="footer-links">
-                <ul>
-                    <li><a class="inst" title="Инстаграм Клин" href="https://www.instagram.com/cyber__place/?igshid=1odgo49e05gf2"><i class="fab fa-instagram"></i></a></li>
-                    <li><a class="vkont" title="Вконтакте" href="https://vk.com/cyberplace_klin"><i class="fab fa-vk"></i></a></li>
-                    <li><a class="inst" title="Инстаграм Солнечногорск" href="https://www.instagram.com/cyberplace_solnecnogorsk/"><i class="fab fa-instagram"></i></a></li>
-                </ul>
-            </div>
+           
         </div>
 
     </div>

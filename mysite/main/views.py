@@ -16,10 +16,7 @@ class IndexView(View):
         context = {'news_list': news_list,'head_list' : head_list, 'forumMiddle' : forum}
         return render(request,'index.html', context)
 
-class InfoView(View):
-    def get(self, request):
-        return render(request, 'info.html', {})
-    
+
 
 def telegramPassword(request):
     if request.method == "GET":
