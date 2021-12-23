@@ -10,15 +10,17 @@ class ForumTitleView(ListAPIView):
     serializer_class = ForumTitleSerializer
 
 class ForumTopView(RetrieveAPIView):
-    "Вывод тем форума"
+    """Вывод тем форума"""
     queryset = ForumTop.objects.all()
     serializer_class = ForumTopSerializer
 
 class ForumMiddleView(ListAPIView):
+    """Вывод под-тем форума"""
     queryset = ForumMiddle.objects.all()
     serializer_class = ForumMiddleSerializer
 
 class ForumMessageView(CreateAPIView):
+    """Создание сообщений форума"""
     serializer_class = ForumMessageSerializer
 
 
